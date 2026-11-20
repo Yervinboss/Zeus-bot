@@ -1,0 +1,11 @@
+{
+  "banned": {},
+  "mode": "public",
+  "anticall": true,
+  "welcome": {},
+  "usage": {
+    "ping": 3,
+    "song": 9
+  },
+  "totalCommands": 12
+}

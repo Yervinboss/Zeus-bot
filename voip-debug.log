@@ -1384,3 +1384,7 @@
 [VOIP][2026-11-20T13:38:19.633Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
 [VOIP][2026-11-20T13:38:39.647Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
 [VOIP][2026-11-20T13:38:59.943Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
+[VOIP][2026-11-20T14:28:26.809Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
+[VOIP][2026-11-20T14:29:06.637Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
+[VOIP][2026-11-20T14:33:53.975Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
+[VOIP][2026-11-20T14:35:49.163Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
