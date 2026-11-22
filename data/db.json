@@ -4,13 +4,13 @@
   "anticall": true,
   "welcome": {},
   "usage": {
-    "ping": 14,
+    "ping": 16,
     "song": 17,
     "menu": 3,
     "reload": 1,
     "info": 1,
     "carousel": 3,
-    "tp": 14
+    "tp": 21
   },
-  "totalCommands": 53
+  "totalCommands": 62
 }
