@@ -1,0 +1,74 @@
+[2026-11-22T11:41:50.802Z] OK Plugin caricati: 9
+[2026-11-22T11:41:51.200Z] INFO Connessione a WhatsApp in corso…
+[2026-11-22T11:42:04.563Z] CMD .menu <- 😿 (Gruppo)
+[2026-11-22T11:44:30.311Z] WARN SIGINT ricevuto: chiudo Zeus, a presto ⚡
+[2026-11-22T11:44:40.957Z] OK Plugin caricati: 9
+[2026-11-22T11:44:41.288Z] INFO Connessione a WhatsApp in corso…
+[2026-11-22T11:44:55.369Z] CMD .song <- 😿 (Gruppo)
+[2026-11-22T11:45:04.347Z] CMD .song <- 😿 (Gruppo)
+[2026-11-22T11:45:44.770Z] WARN SIGINT ricevuto: chiudo Zeus, a presto ⚡
+[2026-11-22T11:47:55.968Z] OK Plugin caricati: 9
+[2026-11-22T11:47:56.254Z] INFO Connessione a WhatsApp in corso…
+[2026-11-22T11:48:03.225Z] CMD .ping <- 😿 (Gruppo)
+[2026-11-22T11:48:11.920Z] CMD .song <- 😿 (Gruppo)
+[2026-11-22T11:48:17.601Z] CMD .song <- 😿 (Gruppo)
+[2026-11-22T11:49:00.240Z] WARN SIGINT ricevuto: chiudo Zeus, a presto ⚡
+[2026-11-22T11:49:20.766Z] OK Plugin caricati: 9
+[2026-11-22T11:49:20.909Z] INFO Connessione a WhatsApp in corso…
+[2026-11-22T11:49:23.324Z] CMD .ping <- 😿 (Gruppo)
+[2026-11-22T11:49:33.332Z] CMD .song <- 😿 (Gruppo)
+[2026-11-22T11:49:39.266Z] CMD .song <- 😿 (Gruppo)
+[2026-11-22T11:50:12.790Z] CMD .song <- 😿 (Gruppo)
+[2026-11-22T11:50:17.723Z] CMD .song <- 😿 (Gruppo)
+[2026-11-22T11:53:23.414Z] WARN SIGINT ricevuto: chiudo Zeus, a presto ⚡
+[2026-11-22T11:54:26.937Z] OK Plugin caricati: 9
+[2026-11-22T11:54:27.383Z] INFO Connessione a WhatsApp in corso…
+[2026-11-22T11:54:32.326Z] CMD .ping <- 😿 (Gruppo)
+[2026-11-22T11:54:47.121Z] CMD .ping <- 😿 (Gruppo)
+[2026-11-22T11:55:26.028Z] CMD .ping <- 😿 (Gruppo)
+[2026-11-22T11:56:59.186Z] CMD .ping <- 😿 (Gruppo)
+[2026-11-22T11:57:23.214Z] CMD .ping <- 999 (Gruppo)
+[2026-11-22T11:58:04.337Z] WARN SIGINT ricevuto: chiudo Zeus, a presto ⚡
+[2026-11-22T11:58:21.736Z] OK Plugin caricati: 10
+[2026-11-22T11:58:21.852Z] INFO Connessione a WhatsApp in corso…
+[2026-11-22T11:58:37.249Z] CMD .tp <- 😿 (Gruppo)
+[2026-11-22T11:59:51.045Z] WARN SIGINT ricevuto: chiudo Zeus, a presto ⚡
+[2026-11-22T12:00:06.043Z] OK Plugin caricati: 10
+[2026-11-22T12:00:06.547Z] INFO Connessione a WhatsApp in corso…
+[2026-11-22T12:00:12.108Z] CMD .carousel <- 😿 (Gruppo)
+[2026-11-22T12:00:26.137Z] CMD .tp <- 😿 (Gruppo)
+[2026-11-22T12:01:47.135Z] WARN SIGINT ricevuto: chiudo Zeus, a presto ⚡
+[2026-11-22T12:02:54.987Z] OK Plugin caricati: 10
+[2026-11-22T12:02:55.252Z] INFO Connessione a WhatsApp in corso…
+[2026-11-22T12:03:08.270Z] CMD .tp <- 😿 (Gruppo)
+[2026-11-22T12:04:05.358Z] CMD .tp <- 999 (Gruppo)
+[2026-11-22T12:05:31.785Z] WARN SIGINT ricevuto: chiudo Zeus, a presto ⚡
+[2026-11-22T12:05:48.622Z] OK Plugin caricati: 10
+[2026-11-22T12:05:48.941Z] INFO Connessione a WhatsApp in corso…
+[2026-11-22T12:05:53.726Z] CMD .tp <- 😿 (Gruppo)
+[2026-11-22T12:06:04.950Z] CMD .tp <- 😿 (Gruppo)
+[2026-11-22T12:06:38.688Z] CMD .tp <- 😿 (Gruppo)
+[2026-11-22T12:07:15.557Z] WARN SIGINT ricevuto: chiudo Zeus, a presto ⚡
+[2026-11-22T12:08:18.111Z] OK Plugin caricati: 10
+[2026-11-22T12:08:18.596Z] INFO Connessione a WhatsApp in corso…
+[2026-11-22T12:08:29.363Z] CMD .tp <- 😿 (Gruppo)
+[2026-11-22T12:08:51.746Z] CMD .carousel <- 😿 (Gruppo)
+[2026-11-22T12:09:59.443Z] WARN SIGINT ricevuto: chiudo Zeus, a presto ⚡
+[2026-11-22T12:10:18.753Z] OK Plugin caricati: 10
+[2026-11-22T12:10:18.930Z] INFO Connessione a WhatsApp in corso…
+[2026-11-22T12:10:25.419Z] CMD .tp <- 😿 (Gruppo)
+[2026-11-22T12:11:57.554Z] CMD .tpplay <- 999 (Gruppo)
+[2026-11-22T12:12:21.301Z] CMD .tpplay <- 😿 (Gruppo)
+[2026-11-22T12:13:01.028Z] WARN SIGINT ricevuto: chiudo Zeus, a presto ⚡
+[2026-11-22T12:13:18.898Z] OK Plugin caricati: 10
+[2026-11-22T12:13:19.335Z] INFO Connessione a WhatsApp in corso…
+[2026-11-22T12:13:50.660Z] CMD .tp <- 😿 (Gruppo)
+[2026-11-22T12:14:34.400Z] WARN SIGINT ricevuto: chiudo Zeus, a presto ⚡
+[2026-11-22T12:14:52.814Z] OK Plugin caricati: 10
+[2026-11-22T12:14:52.948Z] INFO Connessione a WhatsApp in corso…
+[2026-11-22T12:15:17.559Z] CMD .tp <- 😿 (Gruppo)
+[2026-11-22T12:16:16.421Z] WARN SIGINT ricevuto: chiudo Zeus, a presto ⚡
+[2026-11-22T12:17:21.414Z] OK Plugin caricati: 10
+[2026-11-22T12:17:21.650Z] INFO Connessione a WhatsApp in corso…
+[2026-11-22T12:17:43.487Z] CMD .tp <- 😿 (Gruppo)
+[2026-11-22T12:18:30.913Z] WARN SIGINT ricevuto: chiudo Zeus, a presto ⚡

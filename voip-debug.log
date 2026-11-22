@@ -1625,3 +1625,17 @@
 [VOIP][2026-11-22T11:00:48.532Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
 [VOIP][2026-11-22T11:00:57.540Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
 [VOIP][2026-11-22T11:01:09.959Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
+[VOIP][2026-11-22T11:41:51.196Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
+[VOIP][2026-11-22T11:44:41.285Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
+[VOIP][2026-11-22T11:47:56.252Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
+[VOIP][2026-11-22T11:49:20.907Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
+[VOIP][2026-11-22T11:54:27.379Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
+[VOIP][2026-11-22T11:58:21.850Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
+[VOIP][2026-11-22T12:00:06.542Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
+[VOIP][2026-11-22T12:02:55.246Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
+[VOIP][2026-11-22T12:05:48.939Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
+[VOIP][2026-11-22T12:08:18.591Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
+[VOIP][2026-11-22T12:10:18.929Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
+[VOIP][2026-11-22T12:13:19.328Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
+[VOIP][2026-11-22T12:14:52.946Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
+[VOIP][2026-11-22T12:17:21.644Z][DEBUG] component=SocketRecv event=cb_call_handler_registered dir=internal data={"handler":"handleCall"}
