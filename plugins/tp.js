@@ -7,10 +7,13 @@ const MAX_AUDIO_SEC = 900;
 const MAX_VIDEO_SEC = 480;
 let busy = 0;
 
+global.tpSongs = global.tpSongs || {};
+
 const norm = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
 const baseTitle = (s) => norm(String(s).replace(/\(.*?\)|\[.*?\]/g, '').replace(/\s-\s.*$/, ''));
 const fmtTime = (ms) => { const s = Math.round((ms || 0) / 1000); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
 const cut = (s, n) => (String(s).length > n ? String(s).slice(0, n - 1) + '…' : String(s));
+const keyOf = (jid) => String(jid || '').split('@')[0].split(':')[0].replace(/\D/g, '') || String(jid || '');
 
 async function itunes(term, artistOnly) {
   const url = `https://itunes.apple.com/search?term=${encodeURIComponent(term)}&media=music&entity=song&limit=50${artistOnly ? '&attribute=artistTerm' : ''}`;
@@ -87,6 +90,21 @@ function cleanup(stamp) {
   try { for (const f of fs.readdirSync(dir)) if (f.startsWith(stamp + '.')) fs.unlinkSync(path.join(dir, f)); } catch {}
 }
 
+async function toVoiceOgg(inputFile, stamp) {
+  const outFile = path.join(os.tmpdir(), `${stamp}_ptt.ogg`);
+  try {
+    await run('ffmpeg', [
+      '-y', '-i', inputFile,
+      '-vn', '-c:a', 'libopus', '-b:a', '48k', '-ar', '48000', '-ac', '1',
+      outFile
+    ], 2 * 60 * 1000);
+    if (fs.existsSync(outFile) && fs.statSync(outFile).size > 0) {
+      return { buf: fs.readFileSync(outFile), mimetype: 'audio/ogg; codecs=opus', ptt: true };
+    }
+  } catch {}
+  return { buf: fs.readFileSync(inputFile), mimetype: 'audio/mp4', ptt: true };
+}
+
 async function download(query, kind) {
   const stamp = `zeus_tp_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
   const dir = os.tmpdir();
@@ -105,49 +123,38 @@ async function download(query, kind) {
   try {
     await run('yt-dlp', args, 5 * 60 * 1000);
   } catch (e) { cleanup(stamp); throw e; }
-  const file = fs.readdirSync(dir).find((f) => f.startsWith(stamp + '.') && !f.endsWith('.part'));
+  const file = fs.readdirSync(dir).find((f) => f.startsWith(stamp + '.') && !f.endsWith('.part') && !f.endsWith('_ptt.ogg'));
   return { file: file ? path.join(dir, file) : null, stamp };
 }
 
-const MIME = { m4a: 'audio/mp4', mp4: 'audio/mp4', mp3: 'audio/mpeg', ogg: 'audio/ogg; codecs=opus', opus: 'audio/ogg; codecs=opus', webm: 'audio/webm' };
-
 module.exports = {
   name: 'tp',
-  aliases: ['tpplay', 'tpvideo', 'tpmenu', 'top5'],
+  aliases: ['tpplay', 'tpvideo', 'top5'],
   category: 'Musica',
-  description: 'Top 5 canzoni di un artista con bottoni Riproduci e Manda video',
+  description: 'Top 5 canzoni di un artista con bottoni diretti Riproduci e Manda video',
   cooldown: 1500,
-  run: async ({ sock, jid, m, args, command, prefix, reply, react }) => {
+  run: async ({ sock, jid, m, args, command, prefix, reply, react, sender }) => {
     const P = prefix || '.';
     const query = args.join(' ').trim();
+    const skey = keyOf(sender);
 
-    // ── Menu scelta (secondo passo) ──
-    if (command === 'tpmenu') {
-      if (!query) return;
-      const { generateQuickReplyButtons } = require('@innovatorssoft/baileys');
-      const content = generateQuickReplyButtons(
-        `🎵 *${query}*\n\nCosa vuoi fare?`,
-        [
-          { id: `${P}tpplay ${query}`, displayText: '▶️ Riproduci' },
-          { id: `${P}tpvideo ${query}`, displayText: '🎬 Manda video' }
-        ],
-        { footer: 'Zeus Music' }
-      );
-      await sock.sendMessage(jid, content, { quoted: m });
-      return;
-    }
-
-    // ── Bottoni: Riproduci / Manda video ──
     if (command === 'tpplay' || command === 'tpvideo') {
       const kind = command === 'tpvideo' ? 'video' : 'audio';
-      if (!query) return reply({ text: '⚠️ Canzone mancante.' });
+      const index = parseInt(args[0], 10);
+      const songs = global.tpSongs[skey];
+      const song = !Number.isNaN(index) && songs?.[index] ? songs[index] : null;
+
+      if (!song) return reply({ text: `⚠️ Selezione non valida o scaduta. Fai di nuovo *${P}tp artista*.` });
+
+      const targetQuery = song.query || `${song.artistName} - ${song.trackName}`;
       if (busy >= 2) return reply({ text: '⏳ Sto già scaricando altre canzoni, riprova tra poco.' });
+
       busy++;
       await react('⏳');
       let job = null;
       try {
         for (let i = 0; i < 2 && !job?.file; i++) {
-          try { job = await download(query, kind); }
+          try { job = await download(targetQuery, kind); }
           catch (e) {
             const txt = String(e.stderr || e.message);
             if (i === 1 || !/403|timed out|HTTP Error/i.test(txt)) throw e;
@@ -156,14 +163,14 @@ module.exports = {
         }
         if (!job?.file) {
           await react('❌');
-          return reply({ text: `❌ Non ho trovato una versione adatta di *${query}* (max ${kind === 'video' ? MAX_VIDEO_SEC / 60 : MAX_AUDIO_SEC / 60} minuti).` });
+          return reply({ text: `❌ Non ho trovato una versione adatta di *${targetQuery}* (max ${kind === 'video' ? MAX_VIDEO_SEC / 60 : MAX_AUDIO_SEC / 60} minuti).` });
         }
-        const buf = fs.readFileSync(job.file);
-        const ext = path.extname(job.file).slice(1).toLowerCase();
         if (kind === 'video') {
-          await sock.sendMessage(jid, { video: buf, mimetype: 'video/mp4', caption: `🎬 ${query}` }, { quoted: m });
+          const buf = fs.readFileSync(job.file);
+          await sock.sendMessage(jid, { video: buf, mimetype: 'video/mp4', caption: `🎬 ${song.trackName}` }, { quoted: m });
         } else {
-          await sock.sendMessage(jid, { audio: buf, mimetype: MIME[ext] || 'audio/mp4', fileName: `${query}.${ext}` }, { quoted: m });
+          const voice = await toVoiceOgg(job.file, job.stamp);
+          await sock.sendMessage(jid, { audio: voice.buf, mimetype: voice.mimetype, ptt: voice.ptt }, { quoted: m });
         }
         await react('✅');
       } catch (e) {
@@ -181,7 +188,6 @@ module.exports = {
       return;
     }
 
-    // ── .tp <artista> ──
     if (!query) return reply({ text: `🎤 Scrivi il nome dell'artista.\nEsempio: ${P}tp Sfera Ebbasta` });
     await react('🔎');
     let songs;
@@ -189,8 +195,9 @@ module.exports = {
     catch (e) { await react('❌'); return reply({ text: '⚠️ Ricerca non riuscita, riprova tra poco.' }); }
     if (!songs.length) { await react('❌'); return reply({ text: `❌ Nessuna canzone trovata per *${query}*.` }); }
 
+    global.tpSongs[skey] = songs;
+
     const artistName = songs[0].artistName;
-    const qOf = (t) => cut(t.query || `${t.artistName} - ${t.trackName}`, 120);
     const imgOf = (t) => (t.artworkUrl100 || '').replace('100x100bb', '600x600bb') || 'https://picsum.photos/600/600';
 
     const cards = songs.map((t, i) => ({
@@ -198,15 +205,32 @@ module.exports = {
       title: cut(`${i + 1}. ${t.trackName}`, 60),
       body: [t.artistName, t.collectionName ? `💿 ${cut(t.collectionName, 40)}` : '', `⏱️ ${fmtTime(t.trackTimeMillis)}`].filter(Boolean).join(' · '),
       footer: 'Zeus Music',
-      buttons: [
-        { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '🎧 Seleziona', id: `${P}tpmenu ${qOf(t)}` }) }
+      nativeFlow: [
+        {
+          name: 'quick_reply',
+          buttonParamsJson: JSON.stringify({
+            display_text: '▶️ Riproduci',
+            id: `${P}tpplay ${i}`
+          })
+        },
+        {
+          name: 'quick_reply',
+          buttonParamsJson: JSON.stringify({
+            display_text: '🎬 Manda video',
+            id: `${P}tpvideo ${i}`
+          })
+        }
       ]
     }));
 
     let sent = false, lastErr = null;
     for (let attempt = 0; attempt < 2 && !sent; attempt++) {
       try {
-        await sock.sendMessage(jid, { text: `🎤 *Top 5 — ${artistName}*\nScorri e premi Seleziona 👉`, footer: 'Zeus Music', cards }, { quoted: m });
+        await sock.sendMessage(jid, {
+          text: `🎤 *Top 5 — ${artistName}*\nScegli direttamente sulla card 👉`,
+          footer: 'Zeus Music',
+          cards
+        }, { quoted: m });
         sent = true;
       } catch (err) {
         lastErr = err;

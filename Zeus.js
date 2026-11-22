@@ -79,10 +79,10 @@ function saveDb(now = false) {
 }
 
 const plugins = new Map(), commandIndex = new Map(), cooldowns = new Map(), groupCache = new Map();
+global.zeusMsgCache = new Map();
 const stats = { startedAt: Date.now(), commandsExecuted: 0, errors: 0 };
 let reconnectAttempts = 0;
 let bannerShown = false;
-
 function loadPlugins() {
   ensureDir(PLUGINS_DIR);
   plugins.clear();
@@ -205,7 +205,6 @@ function extractText(raw) {
   }
   return String(t || '').trim();
 }
-
 const CORE = {
   reload: {
     name: 'reload', ownerOnly: true,
@@ -276,8 +275,30 @@ const CORE = {
 const CORE_INDEX = new Map();
 for (const c of Object.values(CORE)) { CORE_INDEX.set(c.name, c); for (const a of c.aliases || []) CORE_INDEX.set(a, c); }
 
+
+function cacheMsg(m) {
+  if (!m?.key?.id || !m?.message) return;
+  if (!global.zeusMsgCache || typeof global.zeusMsgCache.set !== 'function') {
+    global.zeusMsgCache = new Map();
+  }
+  global.zeusMsgCache.set(m.key.id, m);
+  if (global.zeusMsgCache.size > 1000) {
+    const firstKey = global.zeusMsgCache.keys().next().value;
+    global.zeusMsgCache.delete(firstKey);
+  }
+}
+
 async function handleMessage(sock, m) {
   if (!m?.message || !m.key?.remoteJid || m.key.remoteJid === 'status@broadcast') return;
+  if (!global.zeusMsgCache || typeof global.zeusMsgCache.set !== 'function') global.zeusMsgCache = new Map();
+  if (m.key.id) {
+    global.zeusMsgCache.set(m.key.id, m);
+    if (global.zeusMsgCache.size > 500) {
+      const firstKey = global.zeusMsgCache.keys().next().value;
+      global.zeusMsgCache.delete(firstKey);
+    }
+  }
+
   const text = extractText(m.message);
   const usedPrefix = PREFIXES.find(p => text.startsWith(p));
   if (!usedPrefix) return;
@@ -324,7 +345,9 @@ async function handleMessage(sock, m) {
   const mentioned = ci.mentionedJid || [];
   const target = mentioned[0] || ci.participant || null;
 
-  log.cmd(`${usedPrefix}${command}`, m.pushName || numberOf(sender), isGroup ? 'Gruppo' : 'Privato');
+  if (!['tp', 'tpplay', 'tpvideo', 'top5'].includes(cmdObj.name)) {
+    log.cmd(`${usedPrefix}${command}`, m.pushName || numberOf(sender), isGroup ? 'Gruppo' : 'Privato');
+  }
   try {
     stats.commandsExecuted++; db.totalCommands++;
     db.usage[cmdObj.name] = (db.usage[cmdObj.name] || 0) + 1;
@@ -345,7 +368,6 @@ async function handleMessage(sock, m) {
     sock.sendPresenceUpdate('paused', jid).catch(() => {});
   }
 }
-
 function askLine(question) {
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
   return new Promise((resolve) => {
@@ -423,9 +445,20 @@ async function connectToWhatsApp() {
   sock.ev.on('creds.update', saveCreds);
 
   sock.ev.on('messages.upsert', async ({ messages, type }) => {
-    if (type !== 'notify') return;
-    for (const m of messages) await handleMessage(sock, m).catch(e => { stats.errors++; log.err('Errore msg:', e); });
-  });
+  for (const m of (messages || [])) {
+    console.log('[UPSERT]', {
+      type,
+      id: m?.key?.id,
+      from: m?.key?.remoteJid,
+      participant: m?.key?.participant,
+      hasMsg: Boolean(m?.message),
+      msgKeys: m?.message ? Object.keys(m.message) : []
+    });
+    if (typeof cacheMsg === 'function') cacheMsg(m);
+  }
+  if (type !== 'notify') return;
+  for (const m of (messages || [])) await handleMessage(sock, m).catch(e => { stats.errors++; log.err('Errore msg:', e); });
+});
 
   sock.ev.on('call', async (calls) => {
     if (!db.anticall) return;
